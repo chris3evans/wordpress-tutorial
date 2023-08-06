@@ -1,10 +1,9 @@
 <?php
-  function generateText($name, $colour) {
-    echo "<p>Hi, my name is $name and my favourite colour is $colour. </p>";
+  $array = [1, 2, 3, 4, 5];
+  $count = 0;
+
+  while ($count < count($array)) {
+    echo "<li>The number is now equal to $array[$count]</li>";
+    $count++;
   }
-
-  generateText('John', 'blue');
-  generateText('Jane', 'green');
 ?>
-
-<h1><?php bloginfo('name');?></h1>
