@@ -29,21 +29,36 @@
                 <span class="metabox__main"><?php the_title();?></span>
               </p>
             </div>
-    <?php } else { ?>
-            <!-- <div class="metabox metabox--position-up metabox--with-home-link">
-              <p>
-                <a class="metabox__blog-home-link" href="#"><i class="fa fa-home" aria-hidden="true"></i> Back to About Us</a> <span class="metabox__main"><?php the_title();?></span>
-              </p>
-            </div> -->
-    <?php }?>
+    <?php } ?>
 
-  <!-- <div class="page-links">
-    <h2 class="page-links__title"><a href="#">About Us</a></h2>
+  <?php
+    $currentPages = ['child_of' => get_the_ID()];
+    $isParentPage = get_pages($currentPages);
+    if ($parent_page_id || $isParentPage) {
+  ?>
+  <div class="page-links">
+    <h2 class="page-links__title">
+      <a href="<?php echo get_permalink($parent_page_id);?>"><?php echo get_the_title($parent_page_id);?></a>
+    </h2>
+
     <ul class="min-list">
-      <li class="current_page_item"><a href="#">Our History</a></li>
-      <li><a href="#">Our Goals</a></li>
+      <?php
+        if ($parent_page_id) {
+          $findChildrenOf = $parent_page_id;
+        } else {
+          $findChildrenOf = $current_page_id;
+        }
+
+        $children_list_array = [
+          'title_li' => null,
+          'child_of' => $findChildrenOf,
+          'sort_column' => 'menu_order'
+        ];
+        wp_list_pages($children_list_array);
+      ?>
     </ul>
-  </div> -->
+  </div>
+  <?php } ?>
 
   <div class="generic-content"><?php the_content();?></div>
 </div>
