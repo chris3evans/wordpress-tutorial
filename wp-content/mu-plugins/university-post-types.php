@@ -1,7 +1,9 @@
 <?php
   function post_types() {
     $eventPostTypeArray = [
+      'has_archive' => true,
       'public' => true,
+      'show_in_rest' => true,
       'menu_icon' => 'dashicons-calendar-alt',
       'labels' => [
         'name' => 'Events',
@@ -11,7 +13,7 @@
         'singular_name' => 'Event'
       ],
     ];
-    register_post_type('Event', $eventPostTypeArray);
+    register_post_type('event', $eventPostTypeArray);
   }
   add_action('init', 'post_types');
 ?>
