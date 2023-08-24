@@ -1,6 +1,11 @@
 <?php
   function post_types() {
     $eventPostTypeArray = [
+      'supports' => [
+        'title',
+        'editor',
+        'excerpt'
+      ],
       'has_archive' => true,
       'public' => true,
       'show_in_rest' => true,
