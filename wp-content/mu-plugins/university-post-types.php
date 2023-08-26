@@ -19,6 +19,25 @@
       ],
     ];
     register_post_type('event', $eventPostTypeArray);
+
+    $programPostTypeArray = [
+      'supports' => [
+        'title',
+        'editor'
+      ],
+      'has_archive' => true,
+      'public' => true,
+      'show_in_rest' => true,
+      'menu_icon' => 'dashicons-book-alt',
+      'labels' => [
+        'name' => 'Program',
+        'add_new_item' => 'Add New Program',
+        'edit_item' => 'Edit Program',
+        'all_items' => 'All Programs',
+        'singular name' => 'Program'
+      ]
+    ];
+    register_post_type('program', $programPostTypeArray);
   }
   add_action('init', 'post_types');
 ?>
