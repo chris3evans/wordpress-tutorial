@@ -38,6 +38,23 @@
       ]
     ];
     register_post_type('program', $programPostTypeArray);
+
+    $professorPostTypeArray = [
+      'supports' => [
+        'title', 'editor',
+      ],
+      'public' => true,
+      'show_in_rest' => true,
+      'menu_icon' => 'dashicons-welcome-learn-more',
+      'labels' => [
+        'name' => 'Professor',
+        'add_new_item' => 'Add New Professor',
+        'edit_item' => 'Edit Professor',
+        'all_items' => 'All Professors',
+        'singular_name' => 'Professor'
+      ]
+    ];
+    register_post_type('professor', $professorPostTypeArray);
   }
   add_action('init', 'post_types');
 ?>

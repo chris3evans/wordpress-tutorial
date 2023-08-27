@@ -1,6 +1,7 @@
 <?php get_header();?>
 
 <?php
+  the_ID();
   while(have_posts()) {
     the_post();
 ?>
@@ -29,19 +30,12 @@
     <?php
         $today = date('Ymd');
 
-        $homepageEvents = new WP_Query([
-          'posts_per_page' => 2,
-          'post_type' => 'event',
-          'meta_key' => 'event_date',
-          'order_by' => 'meta_value_num',
+        $relatedProfessors = new WP_Query([
+          'posts_per_page' => -1,
+          'post_type' => 'professor',
+          'order_by' => 'title',
           'order' => 'ASC',
           'meta_query' => [
-            [
-              'key' => 'event_date',
-              'compare' => '>=',
-              'value' => $today,
-              'type' => 'numeric',
-            ],
             [
               'key' => 'related_program',
               'compare' => 'LIKE',
@@ -50,12 +44,47 @@
           ]
         ]);
 
-        if ($homepageEvents -> have_posts()) { ?>
+        if ($relatedProfessors -> have_posts()) { ?>
           <hr class="section-break">
-          <h2 class="headline headline--medium">Upcoming <?php echo get_the_title();?> Events</h2>
+          <h2 class="headline headline--medium"><?php echo get_the_title();?> Professors</h2>
 
-        <?php while ($homepageEvents -> have_posts()) {
-          $homepageEvents -> the_post();
+        <?php while ($relatedProfessors -> have_posts()) {
+          $relatedProfessors -> the_post();
+      ?>
+          <li>
+            <a href="<?php the_permalink();?>"><?php echo the_title();?></a>
+          </li>
+      <?php }}
+
+      wp_reset_postdata();
+
+      $homepageEvents = new WP_Query([
+        'posts_per_page' => 2,
+        'post_type' => 'event',
+        'meta_key' => 'event_date',
+        'order_by' => 'meta_value_num',
+        'order' => 'ASC',
+        'meta_query' => [
+          [
+            'key' => 'event_date',
+            'compare' => '>=',
+            'value' => $today,
+            'type' => 'numeric',
+          ],
+          [
+            'key' => 'related_program',
+            'compare' => 'LIKE',
+            'value' => '"' . get_the_ID() . '"'
+          ]
+        ]
+      ]);
+
+      if ($homepageEvents -> have_posts()) { ?>
+        <hr class="section-break">
+        <h2 class="headline headline--medium">Upcoming <?php echo get_the_title();?> Events</h2>
+
+      <?php while ($homepageEvents -> have_posts()) {
+        $homepageEvents -> the_post();
       ?>
         <div class="event-summary">
           <a class="event-summary__date t-center" href="#">
