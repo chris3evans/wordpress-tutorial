@@ -41,7 +41,7 @@
 
     $professorPostTypeArray = [
       'supports' => [
-        'title', 'editor',
+        'title', 'editor', 'thumbnail'
       ],
       'public' => true,
       'show_in_rest' => true,

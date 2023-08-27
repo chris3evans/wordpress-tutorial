@@ -1,7 +1,6 @@
 <?php get_header();?>
 
 <?php
-  the_ID();
   while(have_posts()) {
     the_post();
 ?>
@@ -28,33 +27,38 @@
       <?php the_content();?>
     </div>
     <?php
-        $today = date('Ymd');
+      $today = date('Ymd');
 
-        $relatedProfessors = new WP_Query([
-          'posts_per_page' => -1,
-          'post_type' => 'professor',
-          'order_by' => 'title',
-          'order' => 'ASC',
-          'meta_query' => [
-            [
-              'key' => 'related_program',
-              'compare' => 'LIKE',
-              'value' => '"' . get_the_ID() . '"'
-            ]
+      $relatedProfessors = new WP_Query([
+        'posts_per_page' => -1,
+        'post_type' => 'professor',
+        'order_by' => 'title',
+        'order' => 'ASC',
+        'meta_query' => [
+          [
+            'key' => 'related_program',
+            'compare' => 'LIKE',
+            'value' => '"' . get_the_ID() . '"'
           ]
-        ]);
+        ]
+      ]);
 
-        if ($relatedProfessors -> have_posts()) { ?>
-          <hr class="section-break">
-          <h2 class="headline headline--medium"><?php echo get_the_title();?> Professors</h2>
-
+      if ($relatedProfessors -> have_posts()) { ?>
+        <hr class="section-break">
+        <h2 class="headline headline--medium"><?php echo get_the_title();?> Professors</h2>
+        <ul class="professor-cards">
         <?php while ($relatedProfessors -> have_posts()) {
           $relatedProfessors -> the_post();
-      ?>
-          <li>
-            <a href="<?php the_permalink();?>"><?php echo the_title();?></a>
+        ?>
+          <li class="professor-card__list-item">
+            <a class="professor-card" href="<?php the_permalink();?>">
+              <img class="professor-card__image" src="<?php the_post_thumbnail_url();?>">
+              <span class="professor-card__name"><?php the_title();?></span>
+            </a>
           </li>
-      <?php }}
+        <?php } ?>
+        </ul>
+      <?php }
 
       wp_reset_postdata();
 
