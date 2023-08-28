@@ -41,7 +41,7 @@
     }
 
     if (!is_admin() AND is_post_type_archive('campus') AND is_main_query()) {
-      $query -> set('posts_per_page',- 1);
+      $query -> set('posts_per_page', -1);
     }
   }
   add_action('pre_get_posts', 'university_adjust_queries');
