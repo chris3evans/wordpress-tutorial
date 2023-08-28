@@ -60,6 +60,7 @@
       'supports' => [
         'title', 'editor'
       ],
+      'has_archive' => true,
       'public' => true,
       'show_in_rest' => true,
       'menu_icon' => 'dashicons-location-alt',

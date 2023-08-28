@@ -10,7 +10,6 @@
   <ul class="link-list min-list">
   <?php
     $programTypeQuery = new WP_Query();
-
     while (have_posts()) {
       the_post();
   ?>
