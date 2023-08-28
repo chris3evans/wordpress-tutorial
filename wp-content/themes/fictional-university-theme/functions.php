@@ -64,4 +64,10 @@
       </div>
     </div>
   <?php }
+
+  function universityMapKey($api) {
+    $api['key'] = 'AIzaSyBn77B43S5Bk4LJmrl06Gl77sEk5Dyw0uE';
+    return $api;
+  }
+  add_filter('acf/fields/google_map/api', 'universityMapKey');
 ?>

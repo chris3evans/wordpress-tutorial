@@ -55,6 +55,23 @@
       ]
     ];
     register_post_type('professor', $professorPostTypeArray);
+
+    $campusPostTypeArray = [
+      'supports' => [
+        'title', 'editor'
+      ],
+      'public' => true,
+      'show_in_rest' => true,
+      'menu_icon' => 'dashicons-location-alt',
+      'labels' => [
+        'name' => 'Campus',
+        'add_new_item' => 'Add New Campus',
+        'edit_item' => 'Edit Campus',
+        'all_items' => 'All Campuses',
+        'singular_name' => 'Campus'
+      ]
+    ];
+    register_post_type('campus', $campusPostTypeArray);
   }
   add_action('init', 'post_types');
 ?>
