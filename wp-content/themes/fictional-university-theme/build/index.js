@@ -190,7 +190,9 @@ class Search {
     this.searchBtn = jquery__WEBPACK_IMPORTED_MODULE_0___default()(".js-search-trigger");
     this.searchOverlay = jquery__WEBPACK_IMPORTED_MODULE_0___default()(".search-overlay");
     this.closeBtn = jquery__WEBPACK_IMPORTED_MODULE_0___default()(".search-overlay__close");
+    this.searchField = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#search-term");
     this.searchOverlayOpen = false;
+    this.typingTimer;
     this.events();
   }
 
@@ -199,6 +201,7 @@ class Search {
     // "on" method changes value of "this" kw from this instance of Search to whatever HTML element was clicked. Therefore the bind() method is needed:
     this.searchBtn.on("click", this.openOverlay.bind(this));
     this.closeBtn.on("click", this.closeOverlay.bind(this));
+    this.searchField.on("keydown", this.typingLogic.bind(this));
     jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).on("keydown", this.keyPressDispatcher.bind(this));
   }
 
@@ -216,6 +219,13 @@ class Search {
   keyPressDispatcher(e) {
     if (e.keyCode === 83 && !this.searchOverlayOpen) this.openOverlay();
     if (e.keyCode === 27 && this.searchOverlayOpen) this.closeOverlay();
+  }
+  typingLogic(e) {
+    console.log(e.originalEvent.key);
+    clearTimeout(this.typingTimer);
+    this.typingTimer = setTimeout(function () {
+      console.log("hello there");
+    }, 2000);
   }
 }
 /* harmony default export */ __webpack_exports__["default"] = (Search);
