@@ -57,8 +57,14 @@ class Search {
   }
 
   getResults() {
-    this.searchResults.html("<h1>Hello There</h1>");
-    this.isSpinnerVisible = false;
+    // this.searchResults.html("<h1>Hello There</h1>");
+    // this.isSpinnerVisible = false;
+    $.getJSON(
+      `http://fictional-university.local/wp-json/wp/v2/posts?search=${this.searchField.val()}`,
+      function (posts) {
+        console.log(posts, "posts");
+      }
+    );
   }
 
   typingLogic() {
