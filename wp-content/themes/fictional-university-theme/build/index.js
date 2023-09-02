@@ -225,20 +225,19 @@ class Search {
     if (e.keyCode === 27 && this.searchOverlayOpen && !jquery__WEBPACK_IMPORTED_MODULE_0___default()("input, textarea").is(":focus")) this.closeOverlay();
   }
   getResults() {
-    // this.searchResults.html("<h1>Hello There</h1>");
-    // this.isSpinnerVisible = false;
-    jquery__WEBPACK_IMPORTED_MODULE_0___default().getJSON(`http://fictional-university.local/wp-json/wp/v2/posts?search=${this.searchField.val()}`, posts => {
-      const html2 = `
+    jquery__WEBPACK_IMPORTED_MODULE_0___default().getJSON(`${universityData.root_url}/wp-json/wp/v2/posts?search=${this.searchField.val()}`, posts => {
+      const html = `
           <h2 class="search-overlay__section-title">General Information</h2>
-          <ul class="link-list min-list">
-            ${posts.map(post => {
+          ${posts.length === 0 ? "<p>No matching search results</p>" : `<ul class="link-list min-list">
+              ${posts.map(post => {
         return `
-                <li><a href="${post.link}">${post.title.rendered}</a></li>
-              `;
-      })}
-          </ul>
+                  <li><a href="${post.link}">${post.title.rendered}</a></li>
+                `;
+      }).join("")}
+            </ul>`}
         `;
-      this.searchResults.html(html2);
+      this.searchResults.html(html);
+      this.isSpinnerVisible = false;
     });
   }
   typingLogic() {
