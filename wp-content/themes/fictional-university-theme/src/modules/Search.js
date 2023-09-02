@@ -65,24 +65,32 @@ class Search {
         universityData.root_url
       }/wp-json/wp/v2/posts?search=${this.searchField.val()}`,
       (posts) => {
-        const html = `
-          <h2 class="search-overlay__section-title">General Information</h2>
-          ${
-            posts.length === 0
-              ? "<p>No matching search results</p>"
-              : `<ul class="link-list min-list">
-              ${posts
-                .map((post) => {
-                  return `
-                  <li><a href="${post.link}">${post.title.rendered}</a></li>
-                `;
-                })
-                .join("")}
-            </ul>`
+        $.getJSON(
+          `${
+            universityData.root_url
+          }/wp-json/wp/v2/pages?search=${this.searchField.val()}`,
+          (pages) => {
+            const combinedResults = posts.concat(pages);
+            const html = `
+            <h2 class="search-overlay__section-title">General Information</h2>
+              ${
+                combinedResults.length === 0
+                  ? "<p>No matching search results</p>"
+                  : `<ul class="link-list min-list">
+                  ${combinedResults
+                    .map((post) => {
+                      return `
+                      <li><a href="${post.link}">${post.title.rendered}</a></li>
+                    `;
+                    })
+                    .join("")}
+                </ul>`
+              }
+            `;
+            this.searchResults.html(html);
+            this.isSpinnerVisible = false;
           }
-        `;
-        this.searchResults.html(html);
-        this.isSpinnerVisible = false;
+        );
       }
     );
   }
