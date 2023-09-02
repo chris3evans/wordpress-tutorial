@@ -227,8 +227,18 @@ class Search {
   getResults() {
     // this.searchResults.html("<h1>Hello There</h1>");
     // this.isSpinnerVisible = false;
-    jquery__WEBPACK_IMPORTED_MODULE_0___default().getJSON(`http://fictional-university.local/wp-json/wp/v2/posts?search=${this.searchField.val()}`, function (posts) {
-      console.log(posts, "posts");
+    jquery__WEBPACK_IMPORTED_MODULE_0___default().getJSON(`http://fictional-university.local/wp-json/wp/v2/posts?search=${this.searchField.val()}`, posts => {
+      const html2 = `
+          <h2 class="search-overlay__section-title">General Information</h2>
+          <ul class="link-list min-list">
+            ${posts.map(post => {
+        return `
+                <li><a href="${post.link}">${post.title.rendered}</a></li>
+              `;
+      })}
+          </ul>
+        `;
+      this.searchResults.html(html2);
     });
   }
   typingLogic() {
