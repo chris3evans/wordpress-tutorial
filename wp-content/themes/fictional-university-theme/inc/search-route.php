@@ -6,7 +6,19 @@
     ]);
   }
   function universitySearchResults () {
-    return 'Hello There';
+    $professors = new WP_Query([
+      'post_type' => 'professor',
+    ]);
+    $professorResults = [];
+
+    while ($professors -> have_posts()) {
+      $professors -> the_post();
+      array_push($professorResults, [
+        'professorTitle' => get_the_title(),
+        'professorPermalink' => get_the_permalink()
+      ]);
+    }
+    return $professorResults;
   }
 
   add_action('rest_api_init', 'universityRegisterSearch');
