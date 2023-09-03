@@ -228,23 +228,59 @@ class Search {
     if (e.keyCode === 27 && this.searchOverlayOpen && !jquery__WEBPACK_IMPORTED_MODULE_0___default()("input, textarea").is(":focus")) this.closeOverlay();
   }
   getResults() {
-    jquery__WEBPACK_IMPORTED_MODULE_0___default().when(jquery__WEBPACK_IMPORTED_MODULE_0___default().getJSON(`${universityData.root_url}/wp-json/wp/v2/posts?search=${this.searchField.val()}`), jquery__WEBPACK_IMPORTED_MODULE_0___default().getJSON(`${universityData.root_url}/wp-json/wp/v2/pages?search=${this.searchField.val()}`)).then((posts, pages) => {
-      const combinedResults = posts[0].concat(pages[0]);
+    jquery__WEBPACK_IMPORTED_MODULE_0___default().getJSON(`${universityData.root_url}/wp-json/university/v1/search?term=${this.searchField.val()}`, results => {
+      console.log(results);
       const html = `
-      <h2 class="search-overlay__section-title">General Information</h2>
-        ${combinedResults.length === 0 ? "<p>No matching search results</p>" : `<ul class="link-list min-list">
-            ${combinedResults.map(item => {
+        <div class="row">
+          <div class="one-third">
+            <h2 class="search-overlay__section-title">General Information</h2>
+            ${results.generalInfo.length === 0 ? "<p>No matching search results</p>" : `<ul class="link-list min-list">
+              ${results.generalInfo.map(item => {
         return `
-                  <li>
-                    <a href="${item.link}">${item.title.rendered}</a>
-                    ${item.type === "post" ? `by ${item.authorName}` : ""}
-                  </li>
-                `;
+                    <li>
+                      <a href="${item.permalink}">${item.title}</a>
+                      ${item.postType === "post" ? `by ${item.authorName}` : ""}
+                    </li>
+                  `;
       }).join("")}
-          </ul>`}
+            </ul>`}
+          </div>
+          <div class="one-third">
+            <h2 class="search-overlay__section-title">Programs</h2>
+            ${results.programs.length === 0 ? `<p>No matching programs.
+                      <a href="${universityData.root_url}/program">View all programs</a>
+                   </p>` : `<ul class="link-list min-list">
+                ${results.programs.map(program => {
+        return `
+                    <li>
+                      <a href="${program.permalink}">${program.title}</a>
+                    </li>
+                  `;
+      }).join("")}
+                  </ul>`}
+
+            <h2 class="search-overlay__section-title">Professors</h2>
+          </div>
+          <div class="one-third">
+            <h2 class="search-overlay__section-title">Campuses</h2>
+            ${results.campuses.length === 0 ? `<p>No matching campuses.
+                      <a href="${universityData.root_url}/campus">View all campuses</a>
+                   </p>` : `<ul class="link-list min-list">
+                  ${results.campuses.map(campus => {
+        return `
+                      <li>
+                        <a href="${campus.permalink}">${campus.title}</a>
+                      </li>
+                    `;
+      }).join("")}
+                </ul>`}
+
+            <h2 class="search-overlay__section-title">Events</h2>
+          </div>
+        </div>
       `;
-      this.searchResults.html(html);
       this.isSpinnerVisible = false;
+      this.searchResults.html(html);
     });
   }
   typingLogic() {
