@@ -5,9 +5,11 @@
       'callback' => 'universitySearchResults',
     ]);
   }
-  function universitySearchResults () {
+  // $data = information about the request sent
+  function universitySearchResults ($data) {
     $professors = new WP_Query([
       'post_type' => 'professor',
+      's' => sanitize_text_field($data['term'])
     ]);
     $professorResults = [];
 
