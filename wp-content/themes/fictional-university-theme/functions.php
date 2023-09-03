@@ -1,4 +1,10 @@
 <?php
+    function university_custom_rest() {
+      register_rest_field('post', 'authorName', [
+        'get_callback' => function () { return get_the_author(); }
+      ]);
+    }
+    add_action('rest_api_init', 'university_custom_rest');
   function university_files() {
     wp_enqueue_style('university_main_styles', get_theme_file_uri('/build/style-index.css'));
     wp_enqueue_style('university_extra_styles', get_theme_file_uri('/build/index.css'));

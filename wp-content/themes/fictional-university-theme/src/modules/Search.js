@@ -80,10 +80,13 @@ class Search {
             ? "<p>No matching search results</p>"
             : `<ul class="link-list min-list">
             ${combinedResults
-              .map((post) => {
+              .map((item) => {
                 return `
-                <li><a href="${post.link}">${post.title.rendered}</a></li>
-              `;
+                  <li>
+                    <a href="${item.link}">${item.title.rendered}</a>
+                    ${item.type === "post" ? `by ${item.authorName}` : ""}
+                  </li>
+                `;
               })
               .join("")}
           </ul>`

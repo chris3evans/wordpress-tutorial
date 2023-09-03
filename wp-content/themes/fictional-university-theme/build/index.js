@@ -233,10 +233,13 @@ class Search {
       const html = `
       <h2 class="search-overlay__section-title">General Information</h2>
         ${combinedResults.length === 0 ? "<p>No matching search results</p>" : `<ul class="link-list min-list">
-            ${combinedResults.map(post => {
+            ${combinedResults.map(item => {
         return `
-                <li><a href="${post.link}">${post.title.rendered}</a></li>
-              `;
+                  <li>
+                    <a href="${item.link}">${item.title.rendered}</a>
+                    ${item.type === "post" ? `by ${item.authorName}` : ""}
+                  </li>
+                `;
       }).join("")}
           </ul>`}
       `;
