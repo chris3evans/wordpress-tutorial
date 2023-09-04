@@ -22,8 +22,7 @@
 
     $programPostTypeArray = [
       'supports' => [
-        'title',
-        'editor'
+        'title'
       ],
       'has_archive' => true,
       'public' => true,
