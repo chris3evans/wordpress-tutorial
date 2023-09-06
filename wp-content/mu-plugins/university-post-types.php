@@ -1,6 +1,8 @@
 <?php
   function post_types() {
     $eventPostTypeArray = [
+      'capability_type' => 'event',
+      'map_meta_cap' => true,
       'supports' => [
         'title',
         'editor',
@@ -56,6 +58,8 @@
     register_post_type('professor', $professorPostTypeArray);
 
     $campusPostTypeArray = [
+      'capability_type' => 'campus',
+      'map_meta_cap' => true,
       'supports' => [
         'title', 'editor'
       ],
