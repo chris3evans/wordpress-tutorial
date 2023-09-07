@@ -14,7 +14,9 @@
     wp_enqueue_script('main-university-js', get_theme_file_uri('/build/index.js'), array('jquery'), '1.0', true);
     wp_enqueue_script('google-map', '//maps.googleapis.com/maps/api/js?key=AIzaSyBn77B43S5Bk4LJmrl06Gl77sEk5Dyw0uE', null, '1.0', false);
     wp_localize_script('main-university-js', 'universityData', [
-      'root_url' => get_site_url()
+      'root_url' => get_site_url(),
+      // upon successful login, wp will create a random number for the user session which can be used for authentication
+      'nonce' => wp_create_nonce('wp_rest')
     ]);
   }
   add_action('wp_enqueue_scripts', 'university_files');
