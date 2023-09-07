@@ -9,6 +9,7 @@ class MyNotes {
     $(".delete-note").on("click", this.deleteNote.bind(this));
     $(".edit-note").on("click", this.editNote.bind(this));
     $(".update-note").on("click", this.updateNote.bind(this));
+    $(".submit-note").on("click", this.createNote.bind(this));
   }
 
   // methods
@@ -41,6 +42,34 @@ class MyNotes {
       success: (response) => {
         console.log(response);
         this.makeNoteReadOnly(thisNote);
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
+  }
+
+  createNote(event) {
+    const newPostData = {
+      title: $(".new-note-title").val(),
+      content: $(".new-note-body").val(),
+      status: "publish",
+    };
+
+    $.ajax({
+      beforeSend: (x) => {
+        x.setRequestHeader("X-WP-Nonce", universityData.nonce);
+      },
+      url: universityData.root_url + "/wp-json/wp/v2/note/",
+      type: "POST",
+      data: newPostData,
+      success: (response) => {
+        console.log(response);
+        $(".new-note-title, .new-note-body").val("");
+        $("<li>Imagine real data here</li>")
+          .prepend("#my-notes")
+          .hide()
+          .slideDown();
       },
       error: (error) => {
         console.log(error);

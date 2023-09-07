@@ -2251,6 +2251,7 @@ class MyNotes {
     jquery__WEBPACK_IMPORTED_MODULE_0___default()(".delete-note").on("click", this.deleteNote.bind(this));
     jquery__WEBPACK_IMPORTED_MODULE_0___default()(".edit-note").on("click", this.editNote.bind(this));
     jquery__WEBPACK_IMPORTED_MODULE_0___default()(".update-note").on("click", this.updateNote.bind(this));
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(".submit-note").on("click", this.createNote.bind(this));
   }
 
   // methods
@@ -2278,6 +2279,29 @@ class MyNotes {
       success: response => {
         console.log(response);
         this.makeNoteReadOnly(thisNote);
+      },
+      error: error => {
+        console.log(error);
+      }
+    });
+  }
+  createNote(event) {
+    const newPostData = {
+      title: jquery__WEBPACK_IMPORTED_MODULE_0___default()(".new-note-title").val(),
+      content: jquery__WEBPACK_IMPORTED_MODULE_0___default()(".new-note-body").val(),
+      status: "publish"
+    };
+    jquery__WEBPACK_IMPORTED_MODULE_0___default().ajax({
+      beforeSend: x => {
+        x.setRequestHeader("X-WP-Nonce", universityData.nonce);
+      },
+      url: universityData.root_url + "/wp-json/wp/v2/note/",
+      type: "POST",
+      data: newPostData,
+      success: response => {
+        console.log(response);
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()(".new-note-title, .new-note-body").val("");
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()("<li>Imagine real data here</li>").prepend("#my-notes").hide().slideDown();
       },
       error: error => {
         console.log(error);
