@@ -78,6 +78,8 @@
     register_post_type('campus', $campusPostTypeArray);
 
     $notePostTypeArray = [
+      'capability_type' => 'note',
+      'map_meta_cap' => true,
       'show_in_rest' => true,
       'supports' => ['title', 'editor'],
       'public' => false,
