@@ -2237,10 +2237,28 @@ class Likes {
     }
   }
   createLike() {
-    console.log("create like message");
+    jquery__WEBPACK_IMPORTED_MODULE_0___default().ajax({
+      url: `${universityData.root_url}/wp-json/university/v1/manageLike`,
+      type: "POST",
+      success: success => {
+        console.log(success, "success");
+      },
+      error: error => {
+        console.log(error, "error");
+      }
+    });
   }
   deleteLike() {
-    console.log("delete like message");
+    jquery__WEBPACK_IMPORTED_MODULE_0___default().ajax({
+      url: `${universityData.root_url}/wp-json/university/v1/manageLike`,
+      type: "DELETE",
+      success: success => {
+        console.log(success, "success");
+      },
+      error: error => {
+        console.log(error, "error");
+      }
+    });
   }
 }
 /* harmony default export */ __webpack_exports__["default"] = (Likes);

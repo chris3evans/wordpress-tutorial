@@ -21,11 +21,29 @@ class Likes {
   }
 
   createLike() {
-    console.log("create like message");
+    $.ajax({
+      url: `${universityData.root_url}/wp-json/university/v1/manageLike`,
+      type: "POST",
+      success: (success) => {
+        console.log(success, "success");
+      },
+      error: (error) => {
+        console.log(error, "error");
+      },
+    });
   }
 
   deleteLike() {
-    console.log("delete like message");
+    $.ajax({
+      url: `${universityData.root_url}/wp-json/university/v1/manageLike`,
+      type: "DELETE",
+      success: (success) => {
+        console.log(success, "success");
+      },
+      error: (error) => {
+        console.log(error, "error");
+      },
+    });
   }
 }
 
