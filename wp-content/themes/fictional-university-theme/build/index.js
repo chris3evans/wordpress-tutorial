@@ -2067,9 +2067,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_GoogleMap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/GoogleMap */ "./src/modules/GoogleMap.js");
 /* harmony import */ var _modules_Search__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/Search */ "./src/modules/Search.js");
 /* harmony import */ var _modules_MyNotes__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/MyNotes */ "./src/modules/MyNotes.js");
+/* harmony import */ var _modules_Likes__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/Likes */ "./src/modules/Likes.js");
 
 
 // Our modules / classes
+
 
 
 
@@ -2082,6 +2084,7 @@ const heroSlider = new _modules_HeroSlider__WEBPACK_IMPORTED_MODULE_2__["default
 const googleMap = new _modules_GoogleMap__WEBPACK_IMPORTED_MODULE_3__["default"]();
 const search = new _modules_Search__WEBPACK_IMPORTED_MODULE_4__["default"]();
 const myNotes = new _modules_MyNotes__WEBPACK_IMPORTED_MODULE_5__["default"]();
+const likes = new _modules_Likes__WEBPACK_IMPORTED_MODULE_6__["default"]();
 
 /***/ }),
 
@@ -2205,6 +2208,45 @@ class HeroSlider {
 
 /***/ }),
 
+/***/ "./src/modules/Likes.js":
+/*!******************************!*\
+  !*** ./src/modules/Likes.js ***!
+  \******************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "jquery");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
+
+class Likes {
+  constructor() {
+    this.events();
+  }
+  events() {
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(".like-box").on("click", this.ourClickDispatcher.bind(this));
+  }
+
+  // methods
+  ourClickDispatcher(event) {
+    const currentLikeBox = jquery__WEBPACK_IMPORTED_MODULE_0___default()(event.target).closest(".like-box");
+    if (currentLikeBox.data("exists") === "yes") {
+      this.deleteLike();
+    } else {
+      this.createLike();
+    }
+  }
+  createLike() {
+    console.log("create like message");
+  }
+  deleteLike() {
+    console.log("delete like message");
+  }
+}
+/* harmony default export */ __webpack_exports__["default"] = (Likes);
+
+/***/ }),
+
 /***/ "./src/modules/MobileMenu.js":
 /*!***********************************!*\
   !*** ./src/modules/MobileMenu.js ***!
@@ -2240,111 +2282,129 @@ class MobileMenu {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "jquery");
-/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 
 class MyNotes {
   constructor() {
-    this.events();
+    if (document.querySelector("#my-notes")) {
+      (axios__WEBPACK_IMPORTED_MODULE_0___default().defaults).headers.common["X-WP-Nonce"] = universityData.nonce;
+      this.myNotes = document.querySelector("#my-notes");
+      this.events();
+    }
   }
   events() {
-    jquery__WEBPACK_IMPORTED_MODULE_0___default()("#my-notes").on("click", ".delete-note", this.deleteNote.bind(this));
-    jquery__WEBPACK_IMPORTED_MODULE_0___default()("#my-notes").on("click", ".edit-note", this.editNote.bind(this));
-    jquery__WEBPACK_IMPORTED_MODULE_0___default()("#my-notes").on("click", ".update-note", this.updateNote.bind(this));
-    jquery__WEBPACK_IMPORTED_MODULE_0___default()(".submit-note").on("click", this.createNote.bind(this));
+    this.myNotes.addEventListener("click", e => this.clickHandler(e));
+    document.querySelector(".submit-note").addEventListener("click", () => this.createNote());
+  }
+  clickHandler(e) {
+    if (e.target.classList.contains("delete-note") || e.target.classList.contains("fa-trash-o")) this.deleteNote(e);
+    if (e.target.classList.contains("edit-note") || e.target.classList.contains("fa-pencil") || e.target.classList.contains("fa-times")) this.editNote(e);
+    if (e.target.classList.contains("update-note") || e.target.classList.contains("fa-arrow-right")) this.updateNote(e);
+  }
+  findNearestParentLi(el) {
+    let thisNote = el;
+    while (thisNote.tagName != "LI") {
+      thisNote = thisNote.parentElement;
+    }
+    return thisNote;
   }
 
-  // methods
-  editNote(event) {
-    const thisNote = jquery__WEBPACK_IMPORTED_MODULE_0___default()(event.target).parents("li");
-    if (thisNote.data("state") === "editable") {
+  // Methods will go here
+  editNote(e) {
+    const thisNote = this.findNearestParentLi(e.target);
+    if (thisNote.getAttribute("data-state") == "editable") {
       this.makeNoteReadOnly(thisNote);
     } else {
       this.makeNoteEditable(thisNote);
     }
   }
-  updateNote(event) {
-    const thisNote = jquery__WEBPACK_IMPORTED_MODULE_0___default()(event.target).parents("li");
-    const updatedPostData = {
-      title: thisNote.find(".note-title-field").val(),
-      content: thisNote.find(".note-body-field").val()
-    };
-    jquery__WEBPACK_IMPORTED_MODULE_0___default().ajax({
-      beforeSend: x => {
-        x.setRequestHeader("X-WP-Nonce", universityData.nonce);
-      },
-      url: universityData.root_url + `/wp-json/wp/v2/note/${thisNote.data("id")}`,
-      type: "POST",
-      data: updatedPostData,
-      success: response => {
-        console.log(response);
-        this.makeNoteReadOnly(thisNote);
-      },
-      error: error => {
-        console.log(error);
-      }
-    });
-  }
-  createNote(event) {
-    const newPostData = {
-      title: jquery__WEBPACK_IMPORTED_MODULE_0___default()(".new-note-title").val(),
-      content: jquery__WEBPACK_IMPORTED_MODULE_0___default()(".new-note-body").val(),
-      status: "publish"
-    };
-    jquery__WEBPACK_IMPORTED_MODULE_0___default().ajax({
-      beforeSend: x => {
-        x.setRequestHeader("X-WP-Nonce", universityData.nonce);
-      },
-      url: universityData.root_url + "/wp-json/wp/v2/note/",
-      type: "POST",
-      data: newPostData,
-      success: response => {
-        console.log(response);
-        const newNoteHTML = `
-          <li data-id="${response.id}">
-            <input readonly class="note-title-field" value="${response.title.raw}">
-            <span class="edit-note"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</span>
-            <span class="delete-note"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</span>
-            <textarea readonly class="note-body-field">${response.content.raw}</textarea>
-            <span class="update-note btn btn--blue btn--small"><i class="fa fa-arrow-right" aria-hidden="true"></i> Save</span>
-          </li>
-        `;
-        jquery__WEBPACK_IMPORTED_MODULE_0___default()(".new-note-title, .new-note-body").val("");
-        jquery__WEBPACK_IMPORTED_MODULE_0___default()(newNoteHTML).prependTo("#my-notes").hide().slideDown();
-      },
-      error: error => {
-        console.log(error);
-      }
-    });
-  }
   makeNoteEditable(thisNote) {
-    thisNote.find(".edit-note").html('<i class="fa fa-times" aria-hidden="true"></i> Cancel');
-    thisNote.find(".note-title-field, .note-body-field").removeAttr("readonly").addClass("note-active-field");
-    thisNote.find(".update-note").addClass("update-note--visible");
-    thisNote.data("state", "editable");
+    thisNote.querySelector(".edit-note").innerHTML = '<i class="fa fa-times" aria-hidden="true"></i> Cancel';
+    thisNote.querySelector(".note-title-field").removeAttribute("readonly");
+    thisNote.querySelector(".note-body-field").removeAttribute("readonly");
+    thisNote.querySelector(".note-title-field").classList.add("note-active-field");
+    thisNote.querySelector(".note-body-field").classList.add("note-active-field");
+    thisNote.querySelector(".update-note").classList.add("update-note--visible");
+    thisNote.setAttribute("data-state", "editable");
   }
   makeNoteReadOnly(thisNote) {
-    thisNote.find(".edit-note").html('<i class="fa fa-pencil" aria-hidden="true"></i> Edit');
-    thisNote.find(".note-title-field, .note-body-field").attr("readonly", "readonly").removeClass("note-active-field");
-    thisNote.find(".update-note").removeClass("update-note--visible");
-    thisNote.data("state", "cancel");
+    thisNote.querySelector(".edit-note").innerHTML = '<i class="fa fa-pencil" aria-hidden="true"></i> Edit';
+    thisNote.querySelector(".note-title-field").setAttribute("readonly", "true");
+    thisNote.querySelector(".note-body-field").setAttribute("readonly", "true");
+    thisNote.querySelector(".note-title-field").classList.remove("note-active-field");
+    thisNote.querySelector(".note-body-field").classList.remove("note-active-field");
+    thisNote.querySelector(".update-note").classList.remove("update-note--visible");
+    thisNote.setAttribute("data-state", "cancel");
   }
-  deleteNote(event) {
-    const thisNote = jquery__WEBPACK_IMPORTED_MODULE_0___default()(event.target).parents("li");
-    jquery__WEBPACK_IMPORTED_MODULE_0___default().ajax({
-      beforeSend: x => {
-        x.setRequestHeader("X-WP-Nonce", universityData.nonce);
-      },
-      url: universityData.root_url + `/wp-json/wp/v2/note/${thisNote.data("id")}`,
-      type: "DELETE",
-      success: response => {
-        console.log(response);
-        thisNote.slideUp();
-      },
-      error: error => {
-        console.log(error);
+  async deleteNote(e) {
+    const thisNote = this.findNearestParentLi(e.target);
+    try {
+      const response = await axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"](universityData.root_url + "/wp-json/wp/v2/note/" + thisNote.getAttribute("data-id"));
+      thisNote.style.height = `${thisNote.offsetHeight}px`;
+      setTimeout(function () {
+        thisNote.classList.add("fade-out");
+      }, 20);
+      setTimeout(function () {
+        thisNote.remove();
+      }, 401);
+      if (response.data.userNoteCount < 5) {
+        document.querySelector(".note-limit-message").classList.remove("active");
       }
-    });
+    } catch (e) {
+      console.log("Sorry");
+    }
+  }
+  async updateNote(e) {
+    const thisNote = this.findNearestParentLi(e.target);
+    var ourUpdatedPost = {
+      title: thisNote.querySelector(".note-title-field").value,
+      content: thisNote.querySelector(".note-body-field").value
+    };
+    try {
+      const response = await axios__WEBPACK_IMPORTED_MODULE_0___default().post(universityData.root_url + "/wp-json/wp/v2/note/" + thisNote.getAttribute("data-id"), ourUpdatedPost);
+      this.makeNoteReadOnly(thisNote);
+    } catch (e) {
+      console.log("Sorry");
+    }
+  }
+  async createNote() {
+    var ourNewPost = {
+      title: document.querySelector(".new-note-title").value,
+      content: document.querySelector(".new-note-body").value,
+      status: "publish"
+    };
+    try {
+      const response = await axios__WEBPACK_IMPORTED_MODULE_0___default().post(universityData.root_url + "/wp-json/wp/v2/note/", ourNewPost);
+      if (response.data != "You have reached your note limit.") {
+        document.querySelector(".new-note-title").value = "";
+        document.querySelector(".new-note-body").value = "";
+        document.querySelector("#my-notes").insertAdjacentHTML("afterbegin", ` <li data-id="${response.data.id}" class="fade-in-calc">
+            <input readonly class="note-title-field" value="${response.data.title.raw}">
+            <span class="edit-note"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</span>
+            <span class="delete-note"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</span>
+            <textarea readonly class="note-body-field">${response.data.content.raw}</textarea>
+            <span class="update-note btn btn--blue btn--small"><i class="fa fa-arrow-right" aria-hidden="true"></i> Save</span>
+          </li>`);
+        let finalHeight; // browser needs a specific height to transition to, you can't transition to 'auto' height
+        let newlyCreated = document.querySelector("#my-notes li");
+        setTimeout(function () {
+          finalHeight = `${newlyCreated.offsetHeight}px`;
+          newlyCreated.style.height = "0px";
+        }, 30);
+        setTimeout(function () {
+          newlyCreated.classList.remove("fade-in-calc");
+          newlyCreated.style.height = finalHeight;
+        }, 50);
+        setTimeout(function () {
+          newlyCreated.style.removeProperty("height");
+        }, 450);
+      } else {
+        document.querySelector(".note-limit-message").classList.add("active");
+      }
+    } catch (e) {
+      console.error(e);
+    }
   }
 }
 /* harmony default export */ __webpack_exports__["default"] = (MyNotes);
