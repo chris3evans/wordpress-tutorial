@@ -64,7 +64,7 @@ class MyNotes {
       type: "POST",
       data: newPostData,
       success: (response) => {
-        console.log(response);
+        console.log(response, "success");
 
         const newNoteHTML = `
           <li data-id="${response.id}">
@@ -80,7 +80,10 @@ class MyNotes {
         $(newNoteHTML).prependTo("#my-notes").hide().slideDown();
       },
       error: (error) => {
-        console.log(error);
+        if (error.responseText === "You have reached your note limit.") {
+          $(".note-limit-message").addClass("active");
+        }
+        console.log(error, "error");
       },
     });
   }
@@ -125,6 +128,10 @@ class MyNotes {
       type: "DELETE",
       success: (response) => {
         console.log(response);
+        if (response.userNoteCount < 2) {
+          $(".note-limit-message").removeClass("active");
+        }
+
         thisNote.slideUp();
       },
       error: (error) => {
